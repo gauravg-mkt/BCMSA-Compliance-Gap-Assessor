@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCMSA High-Risk Compliance Assessor</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc; /* Light gray background */
+        }
+        /* BCMSA Brand Colors */
+        .bcmsa-primary { background-color: #266092; } /* Primary Blue */
+        .bcmsa-text { color: #266092; } /* Primary Blue for accents */
+        .bcmsa-secondary-text { color: #5c6670; } /* Secondary Grey for body/titles */
+        .bcmsa-light-bg { background-color: #e8edf2; } /* Very light background based on primary */
+        
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        /* Risk Colors (Standard OHS Green, Amber, Red) */
+        .risk-low { border-left: 4px solid #10b981; } /* Emerald Green */
+        .risk-medium { border-left: 4px solid #f59e0b; } /* Amber Orange */
+        .risk-high { border-left: 4px solid #ef4444; } /* Red */
+
+        /* Custom radio styling */
+        .custom-radio input[type="radio"] {
+            display: none;
+        }
+        .custom-radio span {
+            display: block;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            text-align: center;
+        }
+        .custom-radio input[type="radio"]:checked + span {
+            background-color: #266092; /* BCMSA Primary */
+            color: white;
+            border-color: #266092; /* BCMSA Primary */
+            transform: scale(1.02);
+        }
+        .custom-radio input[type="radio"]:hover:not(:checked) + span {
+            background-color: #e8edf2; /* BCMSA Light Background for hover */
+        }
+
+        @media (max-width: 640px) {
+            .risk-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div id="app" class="max-w-4xl mx-auto">
+        <header class="text-center mb-10 p-6 bcmsa-light-bg rounded-xl">
+            <h1 class="text-3xl sm:text-4xl font-extrabold bcmsa-text">BCMSA Compliance Gap Assessor</h1>
+            <!-- Removed ** around 'organization's' -->
+            <p class="mt-2 bcmsa-secondary-text">Identify your organization's highest OHS risk areas and map them directly to required BCMSA training.</p>
+        </header>
+
+        <!-- Assessment Form -->
+        <div id="assessment-form" class="bg-white p-6 sm:p-8 rounded-xl card mb-10">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-700">Step 1: Assess Operational Risk</h2>
+
+            <!-- Risk Area 1: Musculoskeletal Injuries (MSI) -->
+            <div class="mb-8 p-5 border border-gray-200 rounded-lg">
+                <p class="font-semibold text-lg mb-4 text-gray-800">1. MSI Prevention (Office & Field)</p>
+                <p class="text-sm text-gray-500 mb-4">MSIs (Sprains/Strains) are the most common municipal injury. How formalized is your training?</p>
+                <div class="custom-radio grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label>
+                        <input type="radio" name="msi" value="1">
+                        <span class="text-sm">Formal Program (Low Risk)</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="msi" value="4">
+                        <span class="text-sm">Some Training, but inconsistent</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="msi" value="7">
+                        <span class="text-sm">Only Basic Handout/Poster</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="msi" value="10">
+                        <span class="text-sm">No Formal Training (High Risk)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Risk Area 2: Confined Space Entry -->
+            <div class="mb-8 p-5 border border-gray-200 rounded-lg">
+                <p class="font-semibold text-lg mb-4 text-gray-800">2. Confined Space & Utility Work</p>
+                <p class="text-sm text-gray-500 mb-4">How current are the training and procedures for sewer, utility, and vault access?</p>
+                <div class="custom-radio grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label>
+                        <input type="radio" name="confinedSpace" value="1">
+                        <span class="text-sm">Certified Team & Program</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="confinedSpace" value="4">
+                        <span class="text-sm">Team trained, but documentation weak</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="confinedSpace" value="7">
+                        <span class="text-sm">Minimal Training, relying on contractors</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="confinedSpace" value="10">
+                        <span class="text-sm">No Procedures/Entry Training</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Risk Area 3: Psychological Safety & Violence -->
+            <div class="mb-8 p-5 border border-gray-200 rounded-lg">
+                <p class="font-semibold text-lg mb-4 text-gray-800">3. Workplace Violence & Psychological Safety</p>
+                <p class="text-sm text-gray-500 mb-4">How often are frontline staff trained to handle difficult public interactions and report incidents?</p>
+                <div class="custom-radio grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label>
+                        <input type="radio" name="psychSafety" value="1">
+                        <span class="text-sm">Annual Refresher Training</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="psychSafety" value="4">
+                        <span class="text-sm">Training is part of onboarding only</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="psychSafety" value="7">
+                        <span class="text-sm">Policy exists, but no staff training</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="psychSafety" value="10">
+                        <span class="text-sm">No Formal Policy or Training</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- NEW Risk Area 4: Driving & Mobile Equipment -->
+            <div class="mb-8 p-5 border border-gray-200 rounded-lg">
+                <p class="font-semibold text-lg mb-4 text-gray-800">4. Driving & Mobile Equipment Safety</p>
+                <p class="text-sm text-gray-500 mb-4">How often are workers trained on defensive driving, pre-trip inspections, and mobile equipment safe operation?</p>
+                <div class="custom-radio grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label>
+                        <input type="radio" name="driving" value="1">
+                        <span class="text-sm">Formal Defensive Driving/Certifications (Low Risk)</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="driving" value="4">
+                        <span class="text-sm">Only basic licensing checks are done</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="driving" value="7">
+                        <span class="text-sm">No training, relying on operator experience</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="driving" value="10">
+                        <span class="text-sm">No formal program for vehicle safety (High Risk)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- NEW Risk Area 5: Slips, Trips, Falls & Fall Protection -->
+            <div class="mb-8 p-5 border border-gray-200 rounded-lg">
+                <p class="font-semibold text-lg mb-4 text-gray-800">5. Slips, Trips, Falls (STF) & Fall Protection</p>
+                <p class="text-sm text-gray-500 mb-4">Do staff working at heights or performing winter/outdoor work receive specific training on fall hazards and protection?</p>
+                <div class="custom-radio grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label>
+                        <input type="radio" name="falls" value="1">
+                        <span class="text-sm">Specific Fall Protection & STF Programs (Low Risk)</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="falls" value="4">
+                        <span class="text-sm">Training is generic and not hazard-specific</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="falls" value="7">
+                        <span class="text-sm">Just basic housekeeping procedures</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="falls" value="10">
+                        <span class="text-sm">No training or formal procedures (High Risk)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center text-lg font-bold" id="total-score">
+                Risk Score: <span id="current-score" class="bcmsa-text">0</span> / 50
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="bg-white p-6 sm:p-8 rounded-xl card">
+            <h2 class="text-2xl font-semibold mb-6 text-gray-700">Step 2: Recommended BCMSA Solutions</h2>
+
+            <div id="recommendations" class="space-y-4">
+                <!-- Results will be dynamically inserted here -->
+                <p class="text-gray-500 italic text-center" id="initial-message">Please complete the assessment above to see your customized training recommendations.</p>
+            </div>
+            
+            <!-- Explanation Section (Moved to Bottom) -->
+            <details class="mt-8 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <!-- Using secondary color for the summary title, hover uses primary color -->
+                <summary class="text-lg font-semibold cursor-pointer bcmsa-secondary-text hover:text-[#266092]">
+                    &#9432; About the Risk Scoring Methodology
+                </summary>
+                <div class="mt-4 pt-4 border-t border-gray-100 space-y-4 text-sm text-gray-600">
+                    <!-- Removed ** around text -->
+                    <p>The parameters and scoring logic used in this assessor are based on industry best practices and the typical risk profiles of municipal operations in British Columbia, aligning with guidance from the BC Municipal Safety Association (BCMSA) and WorkSafeBC.</p>
+
+                    <h3 class="font-bold text-base mt-4 text-gray-800">1. Selection of the Five Risk Areas</h3>
+                    <!-- Removed ** around text -->
+                    <p>These categories were chosen because they consistently represent the highest frequency (Musculoskeletal Injuries, Slips/Trips/Falls) or highest severity (Confined Space, Driving) hazards found in local government environments, making them "high-risk" areas that warrant immediate compliance focus.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Risk Area</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Why It's Critical</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">MSI Prevention</td>
+                                    <td class="px-3 py-2">Most frequent and costly claims in the sector (WorkSafeBC data).</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">Confined Space</td>
+                                    <td class="px-3 py-2">Highest severity risk (fatality) due to atmospheric hazards. Mandatory WorkSafeBC regulatory requirement.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">Psychological Safety</td>
+                                    <td class="px-3 py-2">Addressing workplace violence and meeting new requirements for psychological health risk assessment.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">Driving & Mobile Equipment</td>
+                                    <td class="px-3 py-2">High-potential risks for serious injury or fatality involving large municipal fleets.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">Falls & Fall Protection</td>
+                                    <td class="px-3 py-2">High frequency (STF) and high severity (Falls from Height). Mandatory fall protection programs.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="font-bold text-base mt-4 text-gray-800">2. The 1-4-7-10 Scoring Logic</h3>
+                    <p>The scoring reflects the maturity of your safety management system. The greater the compliance gap, the higher the score assigned. A score of 7 or 10 in any area triggers a specific, immediate training recommendation.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                    <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interpretation of Risk</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">1 (Low)</td>
+                                    <!-- Removed ** around text -->
+                                    <td class="px-3 py-2">Mature/Formal Program: Policies and formal training are in place and up-to-date. Compliance is likely met.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">4 (Medium)</td>
+                                    <!-- Removed ** around text -->
+                                    <td class="px-3 py-2">Intermediate/Inconsistent: Training or policies exist but are not consistent or specific enough. System needs reinforcement.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">7 (High-Medium)</td>
+                                    <!-- Removed ** around text -->
+                                    <td class="px-3 py-2">Serious Gap: Only general policies exist, or the organization relies heavily on outside resources without internal oversight. Immediate action needed.</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-3 py-2 whitespace-nowrap font-semibold">10 (High)</td>
+                                    <!-- Removed ** around text -->
+                                    <td class="px-3 py-2">Major Compliance Failure: No formal policy, procedure, or training implemented for this high-risk area. High potential for injury and regulatory intervention.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Disclaimer (Existing) -->
+            <div class="mt-8 p-4 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700">
+                <p class="font-bold text-gray-800 mb-1">Disclaimer of Liability:</p>
+                <!-- Removed ** around text -->
+                <p>This is a self-assessment tool designed for educational and informational purposes only. The results are based on subjective input and do not constitute a professional safety audit, legal advice, or a guarantee of compliance with WorkSafeBC or other regulatory standards. The BCMSA strongly recommends consulting with qualified safety professionals or the BCMSA Client Services team for a comprehensive, certified compliance review and program development.</p>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="mt-8 text-center border-t pt-6">
+                <h3 class="text-xl font-bold bcmsa-text mb-3">Ready to close your compliance gaps?</h3>
+                <p class="text-gray-600 mb-5">Click below to contact the BCMSA Client Services - Operations team to schedule your courses or discuss COR implementation.</p>
+                <a href="https://www.bcmsa.ca/contact/" target="_blank" class="bcmsa-primary text-white font-bold py-3 px-6 rounded-lg transition duration-200 hover:bg-[#1c4a73] shadow-lg">
+                    Contact BCMSA & Book Training
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data structure for mapping risk area to BCMSA solutions
+        const RISK_AREAS = [
+            {
+                name: "msi",
+                title: "Musculoskeletal Disorders (MSI)",
+                riskName: "MSI Prevention (Office & Field)",
+                course: "Musculoskeletal Disorder (MSD) Prevention",
+                link: "https://www.bcmsa.ca/course-catalogue/", // Placeholder link to catalogue
+                description: "MSIs account for the highest volume of worker compensation claims in BC. Immediate training for staff and supervisors is critical.",
+                maxScore: 10
+            },
+            {
+                name: "confinedSpace",
+                title: "Confined Space / Utility Work",
+                riskName: "Confined Space & Utility Work",
+                course: "Confined Space Entrant / Attendant",
+                link: "https://www.bcmsa.ca/course-catalogue/",
+                description: "These are high-risk activities. Ensure your team has current training in entry procedures, rescue planning, and legislative requirements.",
+                maxScore: 10
+            },
+            {
+                name: "psychSafety",
+                title: "Psychological Health & Safety",
+                riskName: "Workplace Violence & Psych Safety",
+                course: "Prevention of Workplace Violence & Safe and Sound Certificate",
+                link: "https://www.bcmsa.ca/course-catalogue/",
+                // CORRECTED: Removed extra period and ensured flow
+                description: "Compliance requires a violence prevention program and policy. We recommend focusing on staff facing the public and management awareness.",
+                maxScore: 10
+            },
+            {
+                name: "driving",
+                title: "Driving & Mobile Equipment",
+                riskName: "Driving & Mobile Equipment Safety",
+                course: "Driving for Work (Defensive Driving) / Mobile Equipment Operator Certification",
+                link: "https://www.bcmsa.ca/course-catalogue/",
+                description: "Vehicle accidents and mobile equipment incidents are high-potential risks for serious injury in municipal operations (e.g., Public Works).",
+                maxScore: 10
+            },
+            {
+                name: "falls",
+                title: "Slips, Trips, & Falls",
+                riskName: "Slips, Trips, Falls (STF) & Fall Protection",
+                course: "Slips, Trips & Falls Prevention / Fall Protection",
+                link: "https://www.bcmsa.ca/course-catalogue/",
+                description: "STF incidents are common across all departments. If staff work at heights (3m/10ft or more), formal Fall Protection planning is mandatory.",
+                maxScore: 10
+            }
+        ];
+
+        function getRiskLevel(score) {
+            if (score <= 3) return { label: 'Low Risk', class: 'risk-low text-emerald-600', scoreLevel: 'low' };
+            if (score <= 7) return { label: 'Medium Risk', class: 'risk-medium text-amber-600', scoreLevel: 'medium' };
+            return { label: 'High Risk', class: 'risk-high text-red-600', scoreLevel: 'high' };
+        }
+
+        function calculateRisk() {
+            try {
+                // Retrieve necessary DOM elements
+                const resultsDiv = document.getElementById('recommendations');
+                const totalScoreElement = document.getElementById('current-score');
+                
+                // Safety check for critical containers
+                if (!resultsDiv || !totalScoreElement) {
+                     // Log a specific error if the primary containers are missing
+                     console.error('Risk calculation aborted: Required result/score display elements are missing from the DOM.');
+                     return;
+                }
+
+                // Step 1: Initialize variables and clear the results container
+                resultsDiv.innerHTML = ''; 
+
+                let totalScore = 0;
+                let questionsAnswered = 0;
+                let highRiskAreas = [];
+
+                // Step 2: Calculate score and identify high-risk areas
+                RISK_AREAS.forEach(area => {
+                    // Get selected radio button value
+                    const selectedInput = document.querySelector(`input[name="${area.name}"]:checked`);
+                    const score = parseInt(selectedInput?.value || '0');
+
+                    if (selectedInput) {
+                        questionsAnswered++;
+                    }
+
+                    if (score > 0) {
+                        totalScore += score;
+                        if (score >= 7) { // Define high risk as score 7 or 10
+                            highRiskAreas.push({ ...area, score: score });
+                        }
+                    }
+                });
+
+                // Step 3: Always update the total score immediately
+                totalScoreElement.textContent = totalScore;
+
+                // Step 4: Check for completeness and display appropriate message/results
+                if (questionsAnswered < RISK_AREAS.length) {
+                    // Not all questions answered, display progress message
+                    const remaining = RISK_AREAS.length - questionsAnswered;
+                    resultsDiv.innerHTML = `
+                        <div class="p-4 bg-yellow-50 border border-yellow-300 rounded-lg text-center">
+                            <p class="font-bold text-yellow-700">Assessment In Progress</p>
+                            <p class="text-sm text-yellow-600 mt-1">Please answer the remaining ${remaining} question(s) to view your customized recommendations.</p>
+                        </div>
+                    `;
+                    return; // Stop here, assessment is incomplete
+                }
+                
+                // If the assessment is complete (questionsAnswered === RISK_AREAS.length)
+                if (highRiskAreas.length === 0) {
+                    // All areas are medium/low risk
+                    resultsDiv.innerHTML = `
+                        <div class="p-4 bg-green-50 border border-green-300 rounded-lg text-center">
+                            <p class="font-bold text-green-700">Excellent Work!</p>
+                            <p class="text-sm text-green-600 mt-1">Your total risk score is Low/Medium. Keep reinforcing your existing safety programs and consider BCMSA's COR Certification to solidify your success!</p>
+                        </div>
+                    `;
+                } else {
+                    // Display specific high-risk recommendations
+                    highRiskAreas.sort((a, b) => b.score - a.score); // Sort by highest risk first
+
+                    resultsDiv.innerHTML = `
+                        <p class="text-lg font-semibold text-red-700 mb-4">Immediate Action Required in ${highRiskAreas.length} Area(s):</p>
+                    `;
+
+                    highRiskAreas.forEach(area => {
+                        const risk = getRiskLevel(area.score);
+                        const itemHtml = `
+                            <div class="flex flex-col md:flex-row p-4 border rounded-xl bg-red-50 hover:shadow-md transition ${risk.class}">
+                                <div class="md:w-1/3 mb-2 md:mb-0">
+                                    <p class="font-bold text-gray-800">${area.riskName}</p>
+                                    <p class="text-xs font-semibold ${risk.class}">${risk.label} (${area.score}/10)</p>
+                                </div>
+                                <div class="md:w-2/3 md:pl-4">
+                                    <p class="text-sm mb-2 text-gray-700">${area.description}</p>
+                                    <p class="font-semibold text-sm text-gray-900">Recommended BCMSA Training:</p>
+                                    <a href="${area.link}" target="_blank" class="text-sm font-medium bcmsa-text hover:underline">
+                                        ${area.course} &rarr;
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        resultsDiv.innerHTML += itemHtml;
+                    });
+                }
+            } catch (error) {
+                // This is the safety catch in case of unexpected errors
+                console.error("An unexpected error occurred during risk calculation:", error);
+            }
+        }
+        
+        // Use DOMContentLoaded to ensure the script runs only after the DOM structure is fully loaded and parsed.
+        document.addEventListener('DOMContentLoaded', function() {
+            const assessmentForm = document.getElementById('assessment-form');
+            if (assessmentForm) {
+                // Attach a single change listener to the form area
+                assessmentForm.addEventListener('change', function(event) {
+                    // Check if the changed element is a radio button
+                    if (event.target && event.target.type === 'radio') {
+                        calculateRisk();
+                    }
+                });
+            } else {
+                console.error('Assessment form container not found on load.');
+            }
+        });
+    </script>
+
+</body>
+</html>
